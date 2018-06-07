@@ -1,0 +1,79 @@
+<div class="main-container">
+  <!-- PRIMARY TOOLBAR -->
+  <mat-toolbar color="primary">
+    <button mat-icon-button (click)="snav.toggle()" [style.display]="mobileQuery.matches ? 'inherit' : 'none'">
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <span>Automated Teller Machine</span>
+  </mat-toolbar>
+  <!-- ./PRIMARY TOOLBAR -->
+
+  <mat-sidenav-container class="sidenav-container">
+    <!-- SIDENAV -->
+    <mat-sidenav #snav class="md-whiteframe-5dp" [opened]="!mobileQuery.matches" [mode]="mobileQuery.matches ? 'over' : 'side'"
+      [position]="'start'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
+
+      <div layout="column">
+        <button mat-raised-button color="accent" (click)="restock()">
+          Re-Stock
+        </button>
+        <mat-list>
+          <h3 mat-subheader>ATM Stock</h3>
+          <mat-list-item *ngFor="let item of stock">
+            <mat-icon mat-list-icon>attach_money</mat-icon>
+            <h4 mat-line>{{item.denomination}}</h4>
+            <p mat-line>Stock: {{item.amount}}</p>
+          </mat-list-item>
+        </mat-list>
+      </div>
+
+    </mat-sidenav>
+    <!-- ./SIDENAV -->
+
+    <!-- CONTENT -->
+    <mat-sidenav-content class="md-padding">
+
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Withdraw Money</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+
+          <div layout="column" layout-align="center center" *ngIf="error" class="error">
+            <p class="md-padding">{{error}}</p>
+          </div>
+
+          <div layout="column">
+            <mat-form-field flex>
+              <input matInput type="number" placeholder="Enter An Amount" #amount>
+              <mat-hint>Please enter a whole number</mat-hint>
+            </mat-form-field>
+            <button mat-raised-button color="primary" [disabled]="!amount.value || amount.value === 1" (click)="withdraw(amount.value); amount.value = ''">Withdraw</button>
+          </div>
+
+        </mat-card-content>
+      </mat-card>
+
+
+
+      <h2>History</h2>
+      <mat-card *ngFor="let entry of history">
+        <mat-card-header>
+          <mat-card-title>Amount: {{entry.amount}}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-list>
+            <mat-list-item *ngFor="let bill of entry.bills">
+              <h4 mat-line>Denomination: {{bill.denomination}}</h4>
+              <p mat-line>Amount: {{bill.amount}}</p>
+            </mat-list-item>
+          </mat-list>
+        </mat-card-content>
+      </mat-card>
+
+    </mat-sidenav-content>
+    <!-- ./CONTENT -->
+
+  </mat-sidenav-container>
+</div>
